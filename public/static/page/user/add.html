@@ -1,0 +1,36 @@
+<div class="layuimini-main p20">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>新增一个用户</legend>
+    </fieldset>
+
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline" style="width:280px">
+                <input type="hidden" name="auto_id"  data-each>
+                <input type="text" name="name" data-each lay-verify="required"  placeholder="中文" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-inline" style="width:200px">
+                    <input type="text" name="phone" data-each lay-verify="phone" 
+                          autocomplete="off" class="layui-input">
+                </div>
+            </div> 
+        <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline" style="width:280px">
+                    <input type="text" name="password" class="layui-input">
+                </div>
+            </div>
+   
+              
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="common-submit-save" data-save-url="/admin/user/insert.htm">提交</button>
+            </div>
+        </div>
+    </div>
+
+</div>

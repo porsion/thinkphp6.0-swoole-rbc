@@ -48,7 +48,7 @@
                 <a href="javascript:;">admin</a>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a href="javascript:;" data-one-page="/page/user-setting.html" data-title="基本资料" data-icon="layui-icon-username layui-icon">基本资料</a>
+                        <a href="javascript:;"  id="changeMy">基本资料</a>
                     </dd>
                     <dd>
                         <a href="javascript:;" id="changePwd">修改密码</a>
@@ -169,6 +169,12 @@
             })
         })
 
+        $('#changeMy').click(function(){
+            layer.open({
+                title:'功能未开发！',
+                content:'功能未开发'
+            })
+        })
         $('body').on('click','#changePwd',function(){
             layer.prompt({
                 formType: 1,

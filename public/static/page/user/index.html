@@ -4,7 +4,7 @@
         <div class="layui-form">
             <div class="layui-input-inline">
                 <button class="layui-btn layui-btn-primary" data-page="/page/user/add.html"
-                data-common-add-click  data-box-h="600px"><i class="layui-icon layui-icon-add-1 layui-btn-icon"></i> 新增用户</button>
+                data-common-add-click  ><i class="layui-icon layui-icon-add-1 layui-btn-icon"></i> 新增用户</button>
                 </div>
                 <div class="layui-input-inline" style="margin-left: 25px;width:260px;">
                     <input type="text" name="key" required  placeholder="手机号或用户名" class="layui-input">
@@ -15,7 +15,7 @@
                     <button class="layui-btn layui-btn-primary common-search"><i class="layui-icon layui-icon-search"></i></button>
             </div>
             <div class="layui-input-inline red" id="common-search-tips"></div> 
-
+            </div>
         <table id="user-table" class="layui-table" lay-filter="user-table"></table>
     </div>
 </div>
@@ -56,5 +56,26 @@
                 {field: 'last_login_time', width: 180, title: '最后登录'},
                 {title: '操作', Width: 100, templet: '#user-state', fixed: "right",align:"right"}
             ]]
+    })
+
+    table.on('tool(user-table)',function(e){
+        var event = e.event;
+        var id = e.data.auto_id;
+        if( event == 'edit' )
+        {
+            layer.msg('功能未开发');
+        }
+        else if ( event == 'del')
+        {
+            layer.confirm('真的要删除吗',{icon:3},function(index){
+            http.get('/admin/user/del.htm?id='+id).done(function(res){
+                if(res.code == 'success')
+                {
+                    e.del();
+                }
+                layer.msg(res.msg);
+            })
+        })
+        }
     })
 </script>

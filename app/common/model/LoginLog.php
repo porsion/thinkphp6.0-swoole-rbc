@@ -7,9 +7,9 @@ class LoginLog extends \think\Model
         protected $pk = 'auto_id';
         protected $table ="user_login_log";
         protected $autoWriteTimestamp = 'create_time';
-        protected $type = [
-            'create_time'       => 'datetime',
-        ];
+        // protected $type = [
+        //     'create_time'       => 'datetime',
+        // ];
 
         
         public function insData( \app\Request $req) : \think\Model
@@ -26,4 +26,12 @@ class LoginLog extends \think\Model
             $this->data($data);
             return $this;
         }
+
+
+        public function getIpAttr($ip)
+        {
+            return long2ip($ip);
+        }
 }
+
+

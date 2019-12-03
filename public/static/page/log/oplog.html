@@ -1,0 +1,27 @@
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form">    
+        <table id="oplog-table" class="layui-table" lay-filter="oplog-table"></table>
+    </div>
+</div>
+<script>
+        tb = table.render({
+            elem: '#oplog-table',
+            url: '/admin/log/oplog.htm',
+            headers:{'X-token':vCache.sGet('X-token')},
+            skin: 'line',
+            size:'lg',
+            page:true,
+            limit:15,
+            limits:[15,30,45,60],
+            cols: [[
+                {field: 'auto_id', width: 100, title: 'ID', sort: true},
+                {field: 'name',width:200, title: '用户'},
+                {field: 'create_time', title: '时间',width:180},
+                {field: 'table', width: 180, title: '操作表'},
+                {field: 'mode', width: 220, title: '类型'},
+            ]]
+    })
+
+    </script>

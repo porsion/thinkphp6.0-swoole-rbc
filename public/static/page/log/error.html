@@ -1,0 +1,26 @@
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form">    
+        <table id="error-table" class="layui-table" lay-filter="error-table"></table>
+    </div>
+</div>
+<script>
+        tb = table.render({
+            elem: '#error-table',
+            url: '/admin/log/err.htm',
+            headers:{'X-token':vCache.sGet('X-token')},
+            skin: 'line',
+            size:'lg',
+            page:true,
+            limit:15,
+            limits:[15,30,45,60],
+            cols: [[
+                {field: 'auto_id', width: 100, title: 'ID', sort: true},
+                {field: 'name',width:200, title: '用户'},
+                {field: 'create_time', title: '时间',width:180},
+             
+            ]]
+    })
+
+    </script>

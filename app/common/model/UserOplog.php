@@ -22,9 +22,18 @@ class UserOplog extends \think\Model
         'user_group_menu'       => '用户组菜单',
         'user_login_log'        => '用户登录记录',
         'user_oplog'            => '操作日志',
-        'user_privileges'       => '权限路由'
+        'user_privileges'       => '权限路由',
+        'config'                => '系统设置'
     ];
 
 
+    public function getModeAttr( $r )
+    {
+        return self::MODEL[$r];
+    }
 
+    public function getTableAttr( $e )
+    {
+        return self::TABLE[$e];
+    }
 }

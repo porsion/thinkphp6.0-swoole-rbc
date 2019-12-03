@@ -20,6 +20,7 @@ class Log
                 'pk'    => $mode->getPk(),
                 'pk_value'  => $mode->getKey() ? $mode->getKey() : 0,
                 'mode'  => $mode::getOplogType(),
+                'uid'   => $this->request->user_id,
             ];
             if( $mode::getOplogType() == 'update' )
             {

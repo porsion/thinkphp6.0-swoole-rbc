@@ -50,11 +50,18 @@ Route::post('/admin/set/set_save','app\\admin\\controller\\Setting@set_save')->e
  * 用户管理类
  */
 Route::get('/admin/user','app\\admin\\controller\\User@index')->ext('htm'); 
-Route::get('/admin/user/insert','app\\admin\\controller\\User@insert')->ext('htm'); 
-
+Route::post('/admin/user/insert','app\\admin\\controller\\User@insert')->ext('htm'); 
+Route::get('/admin/user/del','app\\admin\\controller\\User@del')->ext('htm'); 
 
 
 /**
  * 我的资料
  */
 Route::post('/admin/center/save','app\\admin\\controller\\Center@save')->ext('htm'); 
+
+/**
+ * 日志类
+ */
+Route::get('/admin/log/login','app\\admin\\controller\\Log@Login')->ext('htm'); 
+Route::get('/admin/log/err','app\\admin\\controller\\Log@err')->ext('htm'); 
+Route::get('/admin/log/oplog','app\\admin\\controller\\Log@oplog')->ext('htm'); 

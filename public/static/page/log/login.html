@@ -1,0 +1,28 @@
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form">    
+        <table id="login-log-table" class="layui-table" lay-filter="login-log-table"></table>
+    </div>
+</div>
+<script>
+        tb = table.render({
+            elem: '#login-log-table',
+            url: '/admin/log/login.htm',
+            headers:{'X-token':vCache.sGet('X-token')},
+            skin: 'line',
+            size:'lg',
+            page:true,
+            limit:15,
+            limits:[15,30,45,60],
+            cols: [[
+                {field: 'auto_id', width: 100, title: 'ID', sort: true},
+                {field: 'phone', width: 200, title: '手机号'},
+                {field: 'name',width:200, title: '姓名'},
+                {field: 'create_time', title: '时间',width:180},
+                {field: 'ip', width: 180, title: 'IP'},
+                {field: 'location', width: 220, title: '最后登录'},
+            ]]
+    })
+
+    </script>
