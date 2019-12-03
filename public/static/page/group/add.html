@@ -1,0 +1,43 @@
+
+    <div class="layuimini-main p20">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>新增用户组</legend>
+        </fieldset>
+
+        <div class="layui-form" lay-filter="add-group">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称：</label>
+                <div class="layui-input-inline">
+                    <input type="hidden" name="auto_id" value="" data-each>
+                    <input type="text" name="name" data-each lay-verify="required" autocomplete="off" lay-reqtext="组名是必填项，岂能为空？" placeholder="给用户组起个名称" class="layui-input">
+                </div>
+                
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">登录地址</label>
+                <div class="layui-input-inline" style="width:350px">
+                    <input type="text" name="login_url" data-each lay-verify="required" value="/index.html"
+                         lay-reqtext="登录地址不能为空" placeholder="登录地址，类似于：/page/group/index.html" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">登录权限</label>
+                <div class="layui-input-inline" style="width:60px">
+                    <input type="checkbox" name="read_only_login" lay-skin="switch" lay-text="是|否">
+                </div>
+                <div class="layui-form-mid layui-word-aux">维护模式下，是否可以登录</div>
+            </div>
+           
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="common-submit-save" data-save-url="/admin/group/save.htm">提交</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+    form.render()
+    </script>
+

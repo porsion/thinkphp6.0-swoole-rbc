@@ -1,0 +1,159 @@
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <button class="layui-btn layui-btn-sm" id="btn-expand">全部展开</button>
+        <button class="layui-btn layui-btn-sm" id="btn-fold">全部折叠</button>
+        <button class="layui-btn layui-btn-sm layui-btn-primary" data-page="/page/menu/add.html"
+         data-common-add-click data-callback="after_done" data-box-h="600px">新增菜单</button>
+        <table id="munu-table" class="layui-table" lay-filter="munu-table"></table>
+    </div>
+</div>
+<script type="text/html" id="auth-state">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+
+tb = treeTable.render({
+            treeColIndex: 1,
+            treeSpid: 0,
+            treeIdName: 'auto_id',
+            treePidName: 'pid',
+            elem: '#munu-table',
+            skin:'line',
+            size:'lg',
+            url: '/admin/menu.htm',
+            page: false,
+            id:'table',
+            cols: [[
+                
+                {field:'auto_id',title:'ID',width:50},
+                {field: 'title', width: 280, title: '名称'},
+                {field: 'href', title: '页面',width: 260, templet:function(d){
+                    return d.href == '0' ? '--' : d.href
+                }},
+                {field: 'icon', width: 220, align: 'center', title: '图标'},
+              
+                {templet: '#auth-state', width: 150, align: 'center', title: '操作'}
+            ]],
+            done: function () {
+                layer.closeAll();
+            }
+        });
+        $('#btn-expand').click(function () {
+            treeTable.expandAll('#munu-table');
+        });
+
+        $('#btn-fold').click(function () {
+            treeTable.foldAll('#munu-table');
+        });
+
+        function after_done( e )
+        {
+            http.get('/admin/menu/add.htm').done(function(ret){
+            if(ret.code == 'success')
+            {
+                var dom = render_select_dom(ret.data)
+                $(e).find('select').append(dom);
+                form.render('select')  
+                icon.render({
+                elem: '#icon',
+                    type: 'fontClass',
+                    cellWidth: '48px',
+                })                                 
+            }
+            })
+        }
+  
+        //监听工具条
+        table.on('tool(munu-table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'del') {
+                layer.confirm('确定要删除吗？',{icon:5},function(index){
+                    http.get('/admin/menu/del.htm?id='+data.auto_id).done(function(res)
+                    {
+                       layer.close(index)
+                       layer.msg(res.msg)
+                    })
+                })
+            } 
+            else if (layEvent === 'edit') {
+                http.getHtml('/page/menu/add.html',function(res)
+                {
+                    openBox = layer.open({
+                        type:1,
+                        title:'修改菜单',
+                        area:['600px','600px'],
+                        content:res,
+                       success:function(e)
+                        {
+                            $(e).find('legend').text('修改菜单')
+                            http.get('/admin/menu/edit.htm?id='+data.auto_id).done(function(ret){
+                                if(ret.code == 'success')
+                                {
+                                   var dom = selected_dom(render_select_dom(ret.data.all_data),ret.data.find_data.pid)
+                                   $(e).find('select').append(dom);
+                                   layuimini.render($('#add-menu'),ret.data.find_data)
+                                   form.render('select')  
+                                   icon.render({
+                                    elem: '#icon',
+                                        // 数据类型：fontClass/unicode，推荐使用fontClass
+                                        type: 'fontClass',
+                                        cellWidth: '48px',
+                                   })                                 
+                                }
+                            })
+                       }
+                    })
+                })
+             }
+        });
+      
+        var render_select_dom = function ( data )
+        {
+            var dom = '';
+            data.map(function(v,i){
+                dom += '<option value="'+v.auto_id+'">'+v.title+'</option>,';
+                   if( v.children && v.children.length > 0 )
+                   {
+                       v.children.map(function(t){
+                            dom += '<option value="'+t.auto_id+'">'+'|=='+t.title+'</option>,';
+                            if( t.children && t.children.length > 0 )
+                            {
+                                var tchi = t.children;
+                                tchi.map(function(s){
+                                    dom += '<option value="'+s.auto_id+'">'+'|===='+s.title+'</option>,';
+                                    if( s.children && s.children.length > 0 )
+                                    {
+                                        var f = s.children;
+                                        f.map(function(vi){
+                                            dom += '<option value="'+vi.auto_id+'">'+'|======'+vi.title+'</option>,';
+                                            if( vi.children && vi.children.length > 0 )
+                                            {
+                                                vi.children.map(function(bi){
+                                                    dom += '<option value="'+bi.auto_id+'">'+'|========'+bi.title+'</option>,';
+                                                })
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                       })
+                   }
+            })
+            return dom;
+        }
+
+        var selected_dom = function(dom,pid)
+        {
+            var new_dom = dom.split(',').filter(function(s){
+                return s && s.trim();
+            });
+            var res = new_dom.map(function(item){
+               return item.replace('value="'+pid.toString()+'"','selected="selected" value="'+pid.toString()+'"')
+            })
+           return res.join(',').replace(',','')
+        }
+    
+</script>

@@ -1,0 +1,117 @@
+<div class="layuimini-container">
+        <div class="layuimini-main">
+            <div class="layui-form">
+                    <div class="layui-input-inline">
+                    <button class="layui-btn layui-btn-primary" data-page="/page/pri/add.html"
+                    data-common-add-click ><i class="layui-icon layui-icon-add-1 layui-btn-icon"></i>添加权限</button>
+                    <button class="layui-btn layui-btn-danger delete-pri"><i class="layui-icon-delete layui-btn-icon layui-icon"></i>删除全部</button>
+                    </div>
+                    <div class="layui-input-inline" style="margin-left: 25px;width:260px;">
+                            <input type="text" name="key" required  placeholder="从说明或URL里搜索" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline" id="common-clear-input" style="margin-left: -30px;cursor: pointer;margin-right: 5px;">
+                        <i class="layui-icon layui-icon-close"></i></div>
+                    <div class="layui-input-inline">
+                            <button class="layui-btn layui-btn-primary common-search"><i class="layui-icon layui-icon-search"></i></button>
+                    </div>
+                    <div class="layui-input-inline red" id="common-search-tips"></div> 
+            </div> 
+            <table class="layui-hide" id="pri-table" lay-filter="pri-table"></table>
+            <script type="text/html" id="pri-bar">
+                <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+<script>
+    tb = table.render({
+            elem: '#pri-table',
+            url: '/admin/pri.htm',
+            headers:{'X-token':vCache.sGet('X-token')},
+            skin: 'line',
+            size:'lg',
+            page:true,
+            limit:15,
+            limits:[15,30,45,60],
+            cols: [[
+                {type: "checkbox", width: 50, fixed: "left"},
+                {field: 'auto_id', width: 80, title: 'ID', sort: true},
+                {field: 'url', width: 350, title: 'URL',templet:function(e){
+                    var key = $('input[name="key"]').val();
+                    if(key)
+                    {
+                        var reg = new RegExp("(" + key + ")", "g"); 
+                      return  e.url.replace(reg,'<b class="red">$1</b>')   
+                    }
+                    return e.url
+                } },
+                {field: 'desc',minWidth:500, title: '说明',templet:function(e){
+                    var key = $('input[name="key"]').val();
+                    if(key)
+                    {
+                        var reg = new RegExp("(" + key + ")", "g"); 
+                      return  e.desc.replace(reg,'<b class="red">$1</b>')   
+                    }
+                    return e.desc;
+                }},
+                {title: '操作', Width: 100, templet: '#pri-bar', fixed: "right",align:"right"}
+            ]]
+    })
+    table.on('tool(pri-table)',function(obj){
+        var data = obj.data;
+        if( obj.event == 'edit' )
+        {
+            http.getHtml('/page/pri/add.html',function(res){
+                openBox = layer.open({
+                    type:1,
+                    area:['600px','300px'],
+                    content:res,
+                    success:function(e)
+                    {
+                        $(e).find('legend').text('修改权限')
+                        layuimini.render($(e),data);
+                    }
+                })
+            })
+        }
+        else if ( obj.event == 'del')
+        {
+            layer.confirm('你确定要删除？',function(index){
+                http.get('/admin/pri/del.htm?id='+data.auto_id).done(function(res){
+                        if(res.code == 'success')
+                        {
+                                obj.del();
+                                layer.close(index)
+                        }
+                        layer.msg(res.msg)
+                })
+            })
+            
+        }
+    })
+    $('.delete-pri').click(function(){
+        var ids = layuimini.ids(table.checkStatus('pri-table').data);
+            if( ids.length < 1 )
+            {
+                layer.msg('请选择至少一个权限！');
+                return 
+            }
+        layer.confirm('确定全部删除？',function(index){
+            http.post('/admin/pri/del.htm',{ids:ids}).done(function(res){
+                if(res.code == 'success')
+                {
+                    setTimeout(() => {
+                        tb.reload();
+                    }, 600);
+                    
+                    layer.close(index)
+                }
+                layer.msg(res.msg)
+            })
+        })
+
+    })
+    
+
+</script>

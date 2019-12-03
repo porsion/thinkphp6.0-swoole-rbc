@@ -1,0 +1,24 @@
+
+    <div class="layuimini-main p20">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend id="pri-add-title">增加权限</legend>
+           
+        </fieldset>
+        <button class="layui-btn layui-btn-sm data-btn-pri-all">全部加入</button>
+        <table class="layui-hide" id="pri-add" lay-filter="pri-add"></table>
+        <script type="text/html" id="pri-add-Bar-join">
+            <a class="layui-btn layui-btn-xs" lay-event="join" ><i class="layui-icon layui-icon-add-1" style="margin-right:0"></i></a>
+        </script>
+        <script type="text/html" id="pri-add-Bar-out">
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="out" ><i class="layui-icon layui-icon-delete" style="margin-right:0"></i></a>
+        </script>
+    </div>
+
+    <script>
+       var type = $('#currentTableBar').attr('curr-action')
+       if(type == 'out')
+       {
+           $('.data-btn-pri-all').text('全部剔除');
+           $('#pri-add-title').text('取消权限')
+       }
+    </script>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>后台管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="lib/layui-v2.5.4/css/layui.css" media="all">
+    <link rel="stylesheet" href="css/layuimini.css" media="all">
+    <link rel="stylesheet" href="css/public.css?v=74343" media="all">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style id="layuimini-bg-color">
+    </style>
+</head>
+<body class="layui-layout-body layuimini-all">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header header">
+        <div class="layui-logo">
+            <h1>陈二两后台管理</h1>
+        </div>
+        <a><div class="layuimini-tool"><i data-tip="隐藏" class="layui-icon layui-icon-shrink-right" data-side-fold="1"></i></div></a>
+        <ul class="layui-nav layui-layout-left layui-header-menu layui-header-pc-menu mobile layui-hide-xs">
+        </ul>
+        <ul class="layui-nav layui-layout-left layui-header-menu mobile layui-hide-sm">
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="fa fa-list-ul"></i> 选择模块</a>
+                    <dl class="layui-nav-child layui-header-mini-menu">
+                    </dl>
+                </li>
+            </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;" data-tip="清理系统配置缓存" class="clear-config"><i class="layui-icon-delete layui-icon"></i></a>
+            </li>
+            <li class="layui-nav-item">
+                    <a href="javascript:;" data-tip="更新后台菜单" class="refsh-menu"><i class="layui-icon layui-icon-refresh"></i></a>
+                </li>
+            <li class="layui-nav-item layuimini-setting" style="margin-right: 25px;">
+                <a href="javascript:;">admin</a>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a href="javascript:;" data-one-page="/page/user-setting.html" data-title="基本资料" data-icon="layui-icon-username layui-icon">基本资料</a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;" id="changePwd">修改密码</a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;" class="login-out">退出登录</a>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll layui-left-menu">
+        </div>
+    </div>
+
+    <div class="layui-body">
+            <div class="layui-card layuimini-page-header layui-hide-xs layui-hide">
+                <div class="layui-breadcrumb" id="layuimini-page-header">
+                    <a><cite>菜单管理</cite></a>
+                </div>
+            </div>
+            <div class="layuimini-content-page">
+
+            </div>
+        </div>
+</div>
+<script src="lib/layui-v2.5.4/layui.js" charset="utf-8"></script>
+<script src="js/lay-config.js" charset="utf-8"></script>
+<script src="js/common/common.js"></script> 
+<script>
+    layui.use(['element', 'layuimini','vCache','http','table','form','tree','treetable','iconPicker'], function () {
+                window.http = layui.http
+                window.vCache = layui.vCache
+                window.layuimini = layui.layuimini
+                window.form = layui.form
+                window.element = layui.element
+                window.table = layui.table
+                window.$ = layui.jquery
+                window.openBox = null
+                window.tb = null
+                window.tree = layui.tree
+                window.treeTable = layui.treetable
+                window.icon = layui.iconPicker
+                var tipsBox = null;
+                var MenuData = vCache.sGet('menu_data');
+                layuimini.initDevice();
+                layuimini.side_fold(vCache.sGet('side_fold_is_show'),$('[data-side-fold]'))
+                if( !MenuData )
+                {
+                    http.get('/admin/initmenu.htm').done(function(res){
+                        if(res.code == 'success')
+                        {
+                            layuimini.initMenu(res.data)
+                            vCache.sSet('menu_data',res.data)
+                        }
+                    }) 
+                }
+                else
+                {
+                    layuimini.initMenu(MenuData)
+                }
+           layuimini.initConten(vCache.sGet('load_url'))
+           var noticMsg = vCache.sGet('notic_msg')
+           var isHasNotic = vCache.sGet('is_has_notic');
+           if( isHasNotic == 'yes' && !noticMsg)
+           {
+                http.get('/admin/initmsg.htm').done(function(res){
+                    if(res.code == 'success')
+                    {
+                        vCache.sSet('notic_msg',res.data);
+                    }
+                })
+           }
+           form.verify({
+               aplha:[
+               /^[a-z_]+$/g,
+               '必须是小写字母和下划线'
+               ]
+           });
+        window.render_this_dom = function()
+        {
+            form.render()
+        }
+        window.search_reg = function ( key )
+        {
+            if( !key ) return;
+            return new RegExp("(" + key + ")", "g"); 
+        }
+        $('.login-out').on("click", function () {
+            vCache.sRm()
+            layer.msg('退出登录成功', function () {
+                window.location = '/login.html';
+            });
+        });
+        $('body').on('click','.refsh-menu',function(){
+            http.get('/admin/initmenu.htm').done(function(res){
+                if( res.code == 'success' )
+                {
+                    vCache.sSet('menu_data',res.data);
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 800);
+                }
+                layer.msg(res.msg);
+            })
+        })
+        $('body').on('click','.clear-config',function(){
+            http.get('/admin/clear.htm').done(function(res){
+                if(res.code == 'success')
+                {
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 800);
+                   
+                }
+                layer.msg(res.msg)
+            })
+        })
+
+        $('body').on('click','#changePwd',function(){
+            layer.prompt({
+                formType: 1,
+                maxlength: 140,
+                title:'修改密码'
+            },
+            function(value, index){
+               
+                    if( value )
+                    {
+                        http.post('/admin/center/save.htm',{data:{ password: value}}).done(function(res){
+                            layer.close(index);
+                            layer.msg(res.msg)
+                        })
+                    }
+                }
+            )
+        })
+        
+
+    });
+</script>
+
+</body>
+</html>

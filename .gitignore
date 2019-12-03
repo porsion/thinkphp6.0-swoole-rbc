@@ -1,0 +1,8 @@
+/.git
+/.vscode
+/vendor
+*.log
+.env
+/runtime
+/extend
+.travis.yml

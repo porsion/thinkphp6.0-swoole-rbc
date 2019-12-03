@@ -1,0 +1,14 @@
+body {margin:15px 15px 15px 15px;background:#f2f2f2;}
+.layuimini-container {border:1px solid #f2f2f2;border-radius:5px;background-color:#ffffff}
+.layuimini-main {margin:10px 10px 10px 10px;}
+.p20{padding:25px;padding-top:0}
+.layui-btn-icon{font-size: 14px !important;}
+
+.layui-list > li{margin-top:8px;margin-left: 25px;}
+.layui-list>li:first-child {margin-top:0px}
+ol > li {list-style-type: inherit}
+/**必填红点 */
+.red {color:red}
+.layuimini-form>.layui-form-item>.required:after {content:'*';color:red;position:absolute;margin-left:4px;font-weight:bold;line-height:1.8em;top:6px;right:5px;}
+.layuimini-form>.layui-form-item>.layui-form-label {width:120px !important;}
+.layuimini-form>.layui-form-item>.layui-input-block {margin-left:150px !important;}

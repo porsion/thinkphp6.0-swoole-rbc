@@ -1,0 +1,60 @@
+
+<div class="layuimini-container">
+    <div class="layuimini-main">
+        <div class="layui-form">
+            <div class="layui-input-inline">
+                <button class="layui-btn layui-btn-primary" data-page="/page/user/add.html"
+                data-common-add-click  data-box-h="600px"><i class="layui-icon layui-icon-add-1 layui-btn-icon"></i> 新增用户</button>
+                </div>
+                <div class="layui-input-inline" style="margin-left: 25px;width:260px;">
+                    <input type="text" name="key" required  placeholder="手机号或用户名" class="layui-input">
+            </div>
+            <div class="layui-input-inline" id="common-clear-input" style="margin-left: -30px;cursor: pointer;margin-right: 5px;">
+                <i class="layui-icon layui-icon-close"></i></div>
+            <div class="layui-input-inline">
+                    <button class="layui-btn layui-btn-primary common-search"><i class="layui-icon layui-icon-search"></i></button>
+            </div>
+            <div class="layui-input-inline red" id="common-search-tips"></div> 
+
+        <table id="user-table" class="layui-table" lay-filter="user-table"></table>
+    </div>
+</div>
+<script type="text/html" id="user-state">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+        tb = table.render({
+            elem: '#user-table',
+            url: '/admin/user.htm',
+            headers:{'X-token':vCache.sGet('X-token')},
+            skin: 'line',
+            size:'lg',
+            page:true,
+            limit:15,
+            limits:[15,30,45,60],
+            cols: [[
+                {field: 'auto_id', width: 80, title: 'ID', sort: true},
+                {field: 'phone', width: 200, title: '手机号',templet:function(e){
+                    var key = $('input[name="key"]').val();
+                    if(key)
+                    {
+                      return  e.phone.toString().replace(search_reg(key),'<b class="red">$1</b>')   
+                    }
+                    return e.phone
+                } },
+                {field: 'name',width:200, title: '姓名',templet:function(e){
+                    var key = $('input[name="key"]').val();
+                    if(key)
+                    {
+                      return  e.name.replace(search_reg(key),'<b class="red">$1</b>')   
+                    }
+                    return e.name;
+                }},
+                {field: 'create_time', title: '注册时间',width:180},
+                {field: 'status', width: 80, title: '状态'},
+                {field: 'last_login_time', width: 180, title: '最后登录'},
+                {title: '操作', Width: 100, templet: '#user-state', fixed: "right",align:"right"}
+            ]]
+    })
+</script>

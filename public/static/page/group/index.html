@@ -1,0 +1,276 @@
+
+<div class="layuimini-container"> 
+    <div class="layuimini-main">
+        <fieldset class="layui-elem-field">
+            <legend>说明</legend>
+            <ol class="layui-field-box layui-list">
+            <li>
+                登录权限是指，在维护模式下，是否可以登录后台。
+            </li>
+            <li>
+                修改用户组权限后，该用户组下的所有用户，如果有在线的，需要退出后重新登录才能生效
+            </li>
+                <li>
+                关于用户组登录地址的说明：因为一个用户可以加入多个用户组，而每个用户组都有相应的登录地址，因为，在用户登录时，以最后加入的用户组的登录地址为准。
+            </li>
+           
+        </ol>
+            
+        </fieldset>
+                <button class="layui-btn layui-btn-sm" data-page="/page/group/add.html" data-common-add-click>添加用户组</button>
+                <button class="layui-btn layui-btn-danger data-delete-btn layui-btn-sm">批量删除</button>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs" lay-event="join">加权</a>
+            <a class="layui-btn layui-btn-xs" lay-event="out">消权</a>
+            <a class="layui-btn layui-btn-xs" lay-event="menu">菜单</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+        </script>
+    </div>
+</div>
+<script>
+        var pri_tb;
+         tb = table.render({
+            elem: '#currentTableId',
+            url: '/admin/group.htm',
+            headers:{'X-token':vCache.sGet('X-token')},
+            skin: 'line',
+            size:'lg',
+            cols: [[
+                {type: "checkbox", width: 50, fixed: "left"},
+                {field: 'auto_id', width: 80, title: 'ID', sort: true},
+                {field: 'name', width: 150, title: '名称'},
+                {field: 'create_time', width: 180, title: '创建时间'},
+                {field: 'login_url', width: 280, title: '登录URL'},
+                {field: 'read_only_login', width: 120, title: '登录权限' , templet:function(e){
+                    return e.read_only_login == 'y' ? '是' : '否';
+                }},
+
+                {title: '操作', width: 300, templet: '#currentTableBar', fixed: "right", align: "center"}
+            ]],
+            limit: 20,
+            page:true
+        });
+ 
+        // 监听删除操作
+        $(".data-delete-btn").on("click", function () {
+            var ids = layuimini.ids(table.checkStatus('currentTableId').data);
+            if( ids.length < 1 )
+            {
+                layer.msg('请选择至少一个用户组！');
+                return 
+            }
+            layer.confirm('你确定全部删除吗？',function(index){
+                http.post('/admin/group/del.htm',{data:ids}).done(function(res){
+                    if(res.code == 'success')
+                    {
+                        layer.close(index);
+                        tb.reload();
+                    }
+                    layer.msg(res.msg);
+                })
+            })            
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var data = obj.data;
+            $('#currentTableBar').attr('group-id',data.auto_id).attr('curr-action',obj.event);
+            if (obj.event === 'edit') {
+                http.get('/admin/group/add.htm?id='+data.auto_id).done(function(ret){
+                    if(ret.code == 'success')
+                    {
+                        layer.closeAll()
+                        http.getHtml('/page/group/add.html',function(res){
+                           openBox = layer.open({
+                                type:1,
+                                title:'修改用户组',
+                                area:['600px','auto'],
+                                content: res,
+                                success:function(e)
+                                {
+                                    $(e).find('legend').text('修改用户组')
+                                    layuimini.render($(e),ret.data);
+                                    $(e).find('input[name="read_only_login"]').prop("checked",ret.data.read_only_login == 'y' ? true : false);
+                                    form.render('checkbox','add-group');
+                                }
+                            })
+                        })
+                    }
+                })
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    http.get('/admin/group/del.htm?id='+data.auto_id,function(res){
+                        if( res.code == 'success' )
+                        {
+                            obj.del();
+                            layer.close(index);
+                        }
+                        layer.msg(res.msg);
+                    })
+                });
+            }
+            else if ( obj.event === 'join' || obj.event === 'out')
+            {
+                var url ,title = '['+data.name+']';
+                
+                if( obj.event == 'join' )
+                {
+                    url = '/admin/pri/group_hasnt_pri.htm'
+                    title += '增加权限'
+                }
+                else
+                {
+                    url = '/admin/pri/group_has_pri.htm'
+                    title += '取消权限'
+                }
+                http.getHtml('/page/group/pri-add.html',function(res){
+                    openBox = layer.open({
+                                type:1,
+                                title:title,
+                                offset: ['100px','25%'],
+                                area:'750px',
+                                content: res,
+                                success:function()
+                                {
+                                        pri_tb = table.render({
+                                        elem: '#pri-add',
+                                        url: url + '?id=' +data.auto_id,
+                                        headers:{'X-token':vCache.sGet('X-token')},
+                                        skin: 'line',
+                                        cols: [[
+                                            {type: "checkbox", width: 50, fixed: "left"},
+                                            {field: 'auto_id', width: 70, title: 'ID', sort: true},
+                                            {field: 'url', width: 200, title: 'URL'},
+                                            {field: 'desc', title: '说明'},
+                                            {title: '操作', width: 80, templet: '#pri-add-Bar-'+obj.event, fixed: "right", align: "center"}
+                                        ]],
+                                        limit: 10,
+                                        page:true
+                                    });
+                                   
+                                }
+                    });
+                })
+               
+            }
+            else if (obj.event == 'menu')
+            {
+                var title = '['+data.name+']'
+                http.getHtml('/page/group/menu.html',function(res){
+                    openBox = layer.open({
+                        type:1,
+                        title:'设置菜单'+title,
+                        area:'450px',
+                        content: res,
+                        success:function(e)
+                        {
+                            http.get('/admin/group/menu.htm?id='+data.auto_id).done(function(ret){
+                                    if(ret.code == 'success')
+                                    {
+                                        var curr_ids = new Array();
+                                        layer.close(layer_msg_box)
+                                        tree.render({
+                                            elem:'#menu-body',
+                                            data:ret.data.all_menu,
+                                            showCheckbox:true,
+                                            showLine:false,
+                                            accordion:true,
+                                            id:'menu-box'
+                                           
+                                        })
+                                        if( ret.data.group_menu_ids )
+                                        {
+                                                for(var i in ret.data.group_menu_ids)
+                                                {
+                                                    curr_ids.push( ret.data.group_menu_ids[i] )
+                                                }
+                                        }
+                                   
+                                        tree.setChecked('menu-box',curr_ids)
+                                    }
+                            })                          
+                        }
+                    })
+                })
+                
+            }
+            
+        });
+
+        table.on('tool(pri-add)',function(obj){
+            var id = obj.data.auto_id , event = obj.event , group_id = $('#currentTableBar').attr('group-id'),url;
+            if( event == 'join' )
+            {
+                url = '/admin/pri/group_pri_add.htm' 
+            }
+            else if ( event == 'out')
+            {
+                id = obj.data.map_auto_id
+                url = '/admin/pri/group_pri_del.htm' 
+            }
+             http.post(url,{id:id,group_id:group_id}).done(function(res){
+                    if(res.code == 'success')
+                    {
+                        layer.close(layer_msg_box)
+                        layer.close(openBox)
+                       // tb.reload();
+                    }
+                    layer.msg(res.msg);
+                })
+        
+        })
+        $(document).on('click','.data-btn-pri-all',function(){
+       
+            var type = $('#currentTableBar').attr('curr-action'),
+                ids = layuimini.ids(table.checkStatus('pri-add').data, type == 'join' ? 'auto_id' : 'map_auto_id') ,
+                group_id = $('#currentTableBar').attr('group-id');
+            if( ids.length < 1 )
+            {
+                layer.msg('请选择至少一个权限！');
+                return ;
+            }
+            var info = type == 'out' ? '删除' : '加入';
+            var url = type =='out' ? '/admin/pri/group_pri_del.htm' : '/admin/pri/group_pri_add.htm';
+            layer.confirm('你确定全部'+info+'吗？',function(index){
+                
+                http.post(url,{id:ids,group_id:group_id}).done(function(res){
+                    if(res.code == 'success')
+                    {
+                        layer.close(layer_msg_box);
+                        layer.close(index);
+                        layer.close(openBox)
+                        //tb.reload();
+                    }
+                    layer.msg(res.msg);
+                })
+            })            
+        })
+
+        $(document).on('click','.data-btn-menu-save',function(){
+            var checkData = tree.getChecked('menu-box'),
+                 auto_ids = new Array() ,
+                 group_id = $('#currentTableBar').attr('group-id');
+            var auto_ids_fun = function( checkData ){
+                    checkData.map(function(v){
+                        auto_ids.push(v.auto_id);
+                        if( v.children )
+                        {
+                            auto_ids_fun(v.children);
+                        }
+                    })
+            }
+            auto_ids_fun(checkData)
+            if( !group_id )
+            {
+                layer.msg('没有获取到组ID');
+                return ;
+            }
+            http.post('/admin/group/menu_save.htm',{ids:auto_ids,group_id:group_id}).done(function(res){
+                if(res.code == 'success')
+                {
+                    layer.close(openBox);
+                }
+            })
+        })
+</script>

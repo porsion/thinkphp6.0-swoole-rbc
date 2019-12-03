@@ -1,0 +1,58 @@
+<div class="layuimini-main p20">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>新增配置项</legend>
+        </fieldset>
+    
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">下标：</label>
+                <div class="layui-input-inline" style="width:280px">
+                    <input type="hidden" name="auto_id"  data-each>
+                    <input type="text" name="k" data-each lay-verify="required|aplha"  placeholder="英文字母" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                    <label class="layui-form-label">初始值</label>
+                    <div class="layui-input-inline" style="width:200px">
+                        <input type="text" name="v" data-each lay-verify="required" 
+                              autocomplete="off" class="layui-input">
+                    </div>
+                </div> 
+            <div class="layui-form-item">
+                    <label class="layui-form-label">前台后台：</label>
+                    <div class="layui-input-inline" data-radio style="width:280px">
+                        <input type="radio" name="type" value="admin" title="后台" >
+                         <input type="radio" name="type" value="index" title="前台" checked>
+                    </div>
+                </div>
+            <div class="layui-form-item">
+                        <label class="layui-form-label">渲染类型：</label>
+                        <div class="layui-input-block" data-radio>
+                            <input type="radio" name="data_type" value="input" title="input" checked>
+                             <input type="radio" name="data_type" value="switch" title="switch" >
+                             <input type="radio" name="data_type" value="textarea" title="textare" >
+                             <input type="radio" name="data_type" value="input-sm" title="input-sm" >
+                        </div>
+                    </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">label</label>
+                <div class="layui-input-inline" style="width:400px">
+                    <input type="text" name="cn_name" data-each lay-verify="required" 
+                         placeholder="这个配置的label是？" autocomplete="off" class="layui-input">
+                </div>
+            </div>  
+            <div class="layui-form-item">
+                    <label class="layui-form-label">说明</label>
+                    <div class="layui-input-inline" style="width:400px">
+                        <textarea  name="desc" data-each class="layui-textarea"
+                             placeholder="简单说明" autocomplete="off"></textarea>
+                    </div>
+            </div>           
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="common-submit-save" data-save-url="/admin/set/save.htm">提交</button>
+                </div>
+            </div>
+        </div>
+    
+    </div>

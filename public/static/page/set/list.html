@@ -1,0 +1,109 @@
+<div class="layuimini-container">
+        <div class="layuimini-main">
+            <div class="layui-form">
+                    <div class="layui-input-inline">
+                    <button class="layui-btn layui-btn-primary" data-common-add-click data-callback="render_this_dom"
+                    data-page="/page/set/add.html" data-box-h="600px" ><i class="layui-icon layui-icon-add-1 layui-btn-icon"></i>添加配置项</button>
+                    </div>
+                    <div class="layui-input-inline" style="margin-left: 25px;width:260px;">
+                            <input type="text" name="key" required  placeholder="从说明或K里搜索" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline" id="common-clear-input" style="margin-left: -30px;cursor: pointer;margin-right: 5px;">
+                        <i class="layui-icon layui-icon-close"></i></div>
+                    <div class="layui-input-inline">
+                            <button class="layui-btn layui-btn-primary common-search"><i class="layui-icon layui-icon-search"></i></button>
+                    </div>
+                    <div class="layui-input-inline red" id="common-search-tips"></div> 
+            </div> 
+            <table class="layui-hide" id="set-table" lay-filter="set-table"></table>
+            <script type="text/html" id="set-bar">
+                <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+<script>
+    tb = table.render({
+            elem: '#set-table',
+            url: '/admin/set/list.htm',
+            headers:{'X-token':vCache.sGet('X-token')},
+            skin: 'line',
+            size:'lg',
+            page:true,
+            limit:15,
+            limits:[15,30,45,60],
+            cols: [[
+                {field: 'auto_id', width: 80, title: 'ID', sort: true},
+                {field: 'k', width: 200, title: '唯一标示',templet:function(e){
+                    var key = $('input[name="key"]').val();
+                    if(key)
+                    {
+                        var reg = new RegExp("(" + key + ")", "g"); 
+                      return  e.k.replace(reg,'<b class="red">$1</b>')   
+                    }
+                    return e.k
+                } },
+                {field: 'cn_name',width:200, title: 'label',templet:function(e){
+                    var key = $('input[name="key"]').val();
+                    if(key)
+                    {
+                        var reg = new RegExp("(" + key + ")", "g"); 
+                      return  e.cn_name.replace(reg,'<b class="red">$1</b>')   
+                    }
+                    return e.cn_name;
+                }},
+                {field: 'desc',minWidth:600, title: '说明',templet:function(e){
+                    var key = $('input[name="key"]').val();
+                    if(key)
+                    {
+                        var reg = new RegExp("(" + key + ")", "g"); 
+                      return  e.desc.replace(reg,'<b class="red">$1</b>')   
+                    }
+                    return e.desc;
+                }},
+                {field: 'type', width: 80, title: '前后台'},
+                {field: 'data_type', width: 120, title: '数据类型'},
+                {title: '操作', Width: 100, templet: '#set-bar', fixed: "right",align:"right"}
+            ]]
+    })
+
+    table.on('tool(set-table)',function(obj){
+        var k = obj.data.k;
+        var e = obj.event;
+        if( e == 'del' )
+        {
+            layer.confirm('删除配置项可能会引起未预期的错误，请谨慎操作！',{icon:3},function(index){
+                http.get('/admin/set/del.htm?key='+k).done(function(res){
+                    if(res.code == 'success')
+                    {
+                        layer.close(index);
+                        setTimeout(() => {
+                            obj.del();
+                        }, 600);
+                        
+                    }
+                    layer.msg(res.msg)
+                })
+            })
+        }
+        else if (e == 'edit')
+        {
+            http.getHtml('/page/set/add.html',function(res){
+                openBox = layer.open({
+                    type:1,
+                    area:['600px','auto'],
+                    content:res,
+                    success:function(e)
+                    {
+                        $(e).find('legend').text('配置属性')
+                        layuimini.render($(e),obj.data);
+                    form.render();
+                    }
+                })
+            })
+        }
+       // console.log(k)
+    })
+
+</script>

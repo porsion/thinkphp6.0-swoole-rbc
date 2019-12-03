@@ -1,0 +1,62 @@
+<div class="layuimini-container">
+        <div class="layuimini-main layui-row layui-col-space30">
+                <div class="layui-col-md6" >
+                        <h3>后台配置</h3>
+                        <hr>
+                         <div class="layui-form" id="admin-config"></div>
+                </div>
+                <div class="layui-col-md6">
+                        <h3>其它配置</h3>
+                        <hr>
+                        <div class="layui-form" id="index-config"></div>
+                </div>
+        </div>
+    </div>
+
+<script>
+    http.get('/admin/set.htm').done(function(res){
+        if(res.code == 'success')
+        {
+          var  $button_dom = '<div class="layui-form-item"><div class="layui-input-block">'
+                    + '<button class="layui-btn" lay-submit lay-filter="common-submit-save" data-save-url="/admin/set/set_save.htm">确认提交</button></div></div>'
+            if( res.data.admin )
+            {
+                var dom = render_dom(res.data.admin);
+                $('#admin-config').html(dom+$button_dom);
+            }
+            if( res.data.index.length > 0 )
+            {
+                var dom  = render_dom(res.data.index);
+                $('#index-config').html(dom+$button_dom);
+            }            
+            form.render()
+        }
+    })
+    var render_dom = function(data)
+    {
+        var dom = ''
+        data.map(function(v){
+            dom += '<div class="layui-form-item"><label class="layui-form-label">' + v.cn_name + '</label>'
+                + '<div class="layui-input-block">';
+            if( v.data_type == 'input' || v.data_type == 'input-sm' )
+            {
+                var style = '';
+                if( v.data_type == 'input-sm')
+                {
+                    style='style="width:100px"'
+                }
+                dom += '<input type="text" name="'+v.k+'" value="'+ v.v +'" class="layui-input" '+ style + '>'
+            }
+            else if( v.data_type == 'switch')
+            {
+                dom += '<input type="checkbox" name="'+v.k+'" lay-skin="switch" '+ (v.v == 'y' ? 'checked' : '') + 'lay-text="开启|关闭">'
+            }
+            else if( v.data_type == 'textarea' )
+            {
+                dom += '<textarea class="layui-textarea" name="'+v.k+'" placeholder="'+v.desc+'">' +v.v+'</textarea>';
+            }
+            dom += '<div class="layui-form-mid layui-word-aux">' + v.desc + '</div></div></div>';
+        })
+        return dom;
+    }
+</script>
