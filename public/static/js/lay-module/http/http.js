@@ -40,8 +40,7 @@ layui.define(["jquery",'vCache','layer'], function (exports) {
                    {
                        setTimeout(() => {
                         window.location = data.url;
-                       }, 1200);
-                       
+                       }, 1200); 
                    }
                }
                else if (data.code == 'need_login')

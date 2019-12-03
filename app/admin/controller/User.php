@@ -31,7 +31,59 @@ class User extends \app\BaseController
         return $this->lay($data,$rows);
     }
 
+    public function group()
+    {
+        $id = $this->request->get('id');
+        if( $id )
+        {
+            $user_group_ids = \app\common\model\UserGroupMap::where('uid',$id)->column('group_id');
+            $all_group = \app\common\model\UserGroup::select()->toArray();
+            $new_group = [];
+            $new_user_group_ids = [];
+            if( $user_group_ids)
+            {
+                foreach($user_group_ids as $v)
+                {
+                    $new_user_group_ids[] = (string)$v;
+                }
+            }
+            if( $all_group)
+            {
+                foreach($all_group as $k => $v)
+                {
+                    
+                    $new_group[] = ['value' => (string)$v['auto_id'],
+                                'title' => $v['name'],'disabled' => ''];
+                }
+            }
+            return $this->success(['all_group' => $new_group,'user_group' => $new_user_group_ids]);
+        }
+        return $this->error();
+       
+   
+    }
 
+    public function changeGroup()
+    {
+        $id = $this->request->get('id');
+        if( $id )
+        {
+            \app\common\model\UserGroupMap::where('uid',$id)->delete();
+            if( $data = $this->request->post('data/a') )
+            {
+                foreach( $data as $v )
+                {
+                    $ins[] = ['uid' => $id,'group_id'=>$v,'join_time' => time()];
+                }
+                if( isset($ins) && count($ins) > 0)
+                {
+                    app(\app\common\model\UserGroupMap::class)->saveAll($ins);
+                }
+            }
+            return $this->success('用户组修改成功！');
+        }
+        return $this->error();
+    }
     public function insert()
     {
         $data = $this->request->post('data');

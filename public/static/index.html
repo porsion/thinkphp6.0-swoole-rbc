@@ -72,7 +72,20 @@
                 </div>
             </div>
             <div class="layuimini-content-page">
+                <div class="layui-card" style="padding-top:50px;height: 90vh;">
+                    <center><fieldset class="layui-elem-field">
 
+                        <legend>欢迎体验！首页未写，本项目已放弃</legend>
+                        <div class="layui-field-box" style="width:500px">
+                            本项目是用 thinkphp6+swoole 写的，感觉实在是鸡肋，要么用thinkphp6.0，要么用其它基于swoole的框架。
+                            我一路写下来，发现thinkphp6.0+swoole 实是尴尬，文档方面 ，关于swoole的少之又后，我要是去一点点的
+                            刨代码，还不如用一个文档稍微写了点的框架，还有，框架所有的代码都在onRequest事件中，用swoole和不用，又有什么区别？
+                            因此放弃
+                        </div>
+                       </center>
+                    </fieldset>
+                </div>
+                   
             </div>
         </div>
 </div>
@@ -80,7 +93,7 @@
 <script src="js/lay-config.js" charset="utf-8"></script>
 <script src="js/common/common.js"></script> 
 <script>
-    layui.use(['element', 'layuimini','vCache','http','table','form','tree','treetable','iconPicker'], function () {
+    layui.use(['element', 'layuimini','vCache','http','table','form','tree','treetable','iconPicker','transfer'], function () {
                 window.http = layui.http
                 window.vCache = layui.vCache
                 window.layuimini = layui.layuimini
@@ -91,6 +104,7 @@
                 window.openBox = null
                 window.tb = null
                 window.tree = layui.tree
+                window.transfer = layui.transfer
                 window.treeTable = layui.treetable
                 window.icon = layui.iconPicker
                 var tipsBox = null;

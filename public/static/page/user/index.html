@@ -21,6 +21,7 @@
 </div>
 <script type="text/html" id="user-state">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="group">设置组</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script>
@@ -76,6 +77,57 @@
                 layer.msg(res.msg);
             })
         })
+        }
+        else if( event == 'group' )
+        {
+            http.getHtml('/page/user/group.html',function(res){
+                var title = '设置['+e.data.name+']的用户组'
+                http.get('/admin/user/group.htm?id='+e.data.uid).done(function(ret){
+                     openBox =  layer.open({
+                            title:title,
+                            offset: ['100px','500px'],
+                            content:res,
+                            success:function(e)
+                            {
+                               
+                                    $(e).find('legend').text(title);
+                                        transfer.render({
+                                            elem: '#set-group'
+                                            ,title:['所有组','已加入的组']
+                                            ,data: ret.data.all_group
+                                            ,value:ret.data.user_group
+                                            ,id: 'set-group' 
+                                            ,showSearch:true,
+                                            text:{
+                                                none:'未加入任何户组'
+                                                ,searchNone:'没有相关用户组'
+                                            }
+                                        });
+                                }
+                                ,yes:function(indexo)
+                                {
+                                    var getData = transfer.getData('set-group'); 
+                                    var new_data = Array();
+                                    getData.map(function(r){
+                                        new_data.push(r.value)
+                                    })
+                                   http.post('/admin/user/changegroup.htm?id='+e.data.uid,{data:new_data}).done(function(res){
+                                       if(res.code == 'success')
+                                       {
+                                           layer.msg(res.msg);
+                                       }
+                                       else 
+                                       {
+                                           layer.alert(res.msg);
+                                       }
+                                       
+                                   })
+                                }
+                                   
+                            })
+                              
+                })
+            })
         }
     })
 </script>

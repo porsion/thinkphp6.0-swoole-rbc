@@ -52,8 +52,8 @@ Route::post('/admin/set/set_save','app\\admin\\controller\\Setting@set_save')->e
 Route::get('/admin/user','app\\admin\\controller\\User@index')->ext('htm'); 
 Route::post('/admin/user/insert','app\\admin\\controller\\User@insert')->ext('htm'); 
 Route::get('/admin/user/del','app\\admin\\controller\\User@del')->ext('htm'); 
-
-
+Route::rule('/admin/user/group','app\\admin\\controller\\User@group','GET')->ext('htm'); //列出用户的用户组
+Route::post('/admin/user/changegroup','app\\admin\\controller\\User@changeGroup','GET')->ext('htm'); //提交用户组的变更
 /**
  * 我的资料
  */

@@ -99,12 +99,11 @@
                     }
                 })
             } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
+                layer.confirm('真的删除行么', function () {
                     http.get('/admin/group/del.htm?id='+data.auto_id,function(res){
                         if( res.code == 'success' )
                         {
                             obj.del();
-                            layer.close(index);
                         }
                         layer.msg(res.msg);
                     })

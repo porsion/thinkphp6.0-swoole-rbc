@@ -10,17 +10,18 @@ class Log
     /**
      * 用户操作日志
      */
-    public  function onOplog( ? object $mode)
+    public  function onOplog( ? object $mode )
     {
        if( !$mode ) return ;
-        go(function() use( $mode){
+       $user_id = app(\app\Request::class)->user_id;
+        go(function() use( $mode,$user_id ){
             $data = 
             [
                 'table' => Str::snake(class_basename($mode)),
                 'pk'    => $mode->getPk(),
                 'pk_value'  => $mode->getKey() ? $mode->getKey() : 0,
                 'mode'  => $mode::getOplogType(),
-                'uid'   => $this->request->user_id,
+                'uid'   => $user_id,
             ];
             if( $mode::getOplogType() == 'update' )
             {
