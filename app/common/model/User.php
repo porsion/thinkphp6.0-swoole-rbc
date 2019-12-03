@@ -64,11 +64,6 @@ class User extends \think\Model
     }
 
 
-    // public function setPasswordAttr( $e )
-    // {
-    //     return password_hash($e,PASSWORD_DEFAULT);
-    // }
-
     /**
      * 删除完成后
      */

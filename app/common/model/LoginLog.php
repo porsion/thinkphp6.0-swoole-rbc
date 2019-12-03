@@ -6,12 +6,7 @@ class LoginLog extends \think\Model
 {
         protected $pk = 'auto_id';
         protected $table ="user_login_log";
-        protected $autoWriteTimestamp = 'create_time';
-        // protected $type = [
-        //     'create_time'       => 'datetime',
-        // ];
-
-        
+        protected $autoWriteTimestamp = 'create_time';        
         public function insData( \app\Request $req) : \think\Model
         {
             $ip2region = new \app\common\Ip2Region( app()->getConfigPath().'ip2region.db' );
