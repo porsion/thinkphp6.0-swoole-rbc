@@ -83,6 +83,8 @@
             http.getHtml('/page/user/group.html',function(res){
                 var title = '设置['+e.data.name+']的用户组'
                 http.get('/admin/user/group.htm?id='+e.data.uid).done(function(ret){
+                    if(ret.code == 'success')
+                    {
                      openBox =  layer.open({
                             title:title,
                             offset: ['100px','500px'],
@@ -125,7 +127,11 @@
                                 }
                                    
                             })
-                              
+                        }
+                        else
+                        {
+                            layer.msg(ret.msg)
+                        }
                 })
             })
         }
