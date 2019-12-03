@@ -79,12 +79,13 @@ class Index extends BaseController
         $group_id = \get_group_id($this->request->user_id); 
         $data = app(UserGroupMenu::class)->alias('g')->whereIn('g.group_id',$group_id)->leftJoin('menu m','g.menu_id = m.auto_id')
                     ->field('m.*')->select();
+       
         if( $data )
         {
             $data = $data->toArray();
+            return $this->success(\create_menu($data));
         }
-     
-        return $this->success(\create_menu($data));
+        return $this->success();
     }
 
     public function logout()
