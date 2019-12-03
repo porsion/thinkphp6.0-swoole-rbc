@@ -1,19 +1,5 @@
 
-{
-    "name": "tencent-hk",
-    "host": "150.109.113.251",
-    "protocol": "sftp",
-    "port": 22,
-    "username": "chen",
-    "password": "adb#123456",
-    "remotePath": "/home/chen/www/simple",
-    "uploadOnSave": true,
-    "watcher": {
-        "files": "**/*.php",
-        "autoUpload": true,
-        "autoDelete": true
-    }
-}
+
 
 ThinkPHP遵循Apache2开源协议发布，并提供免费使用。
 版权所有Copyright © 2006-2016 by ThinkPHP (http://thinkphp.cn)
