@@ -13,7 +13,7 @@
     <link rel="icon" href="images/favicon.ico">
     <link rel="stylesheet" href="lib/layui-v2.5.4/css/layui.css" media="all">
     <link rel="stylesheet" href="css/layuimini.css" media="all">
-    <link rel="stylesheet" href="css/public.css?v=74343" media="all">
+    <link rel="stylesheet" href="css/public.css" media="all">
     <!--[if lt IE 9]>
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
@@ -25,7 +25,7 @@
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header header">
         <div class="layui-logo">
-            <h1>陈二两后台管理</h1>
+            <a href="javascript:;" data-load-page="/page/index_croe.html" class="layui-menu-tips"><h1>陈二两后台管理</h1></a>
         </div>
         <a><div class="layuimini-tool"><i data-tip="隐藏" class="layui-icon layui-icon-shrink-right" data-side-fold="1"></i></div></a>
         <ul class="layui-nav layui-layout-left layui-header-menu layui-header-pc-menu mobile layui-hide-xs">
@@ -72,19 +72,7 @@
                 </div>
             </div>
             <div class="layuimini-content-page">
-                <div class="layui-card" style="padding-top:50px;height: 90vh;">
-                    <center><fieldset class="layui-elem-field">
-
-                        <legend>欢迎体验！首页未写，本项目已放弃</legend>
-                        <div class="layui-field-box" style="width:500px">
-                            本项目是用 thinkphp6+swoole 写的，感觉实在是鸡肋，要么用thinkphp6.0，要么用其它基于swoole的框架。
-                            我一路写下来，发现thinkphp6.0+swoole 实是尴尬，文档方面 ，关于swoole的少之又后，我要是去一点点的
-                            刨代码，还不如用一个文档稍微写了点的框架，还有，框架所有的代码都在onRequest事件中，用swoole和不用，又有什么区别？
-                            因此放弃
-                        </div>
-                       </center>
-                    </fieldset>
-                </div>
+                
                    
             </div>
         </div>
@@ -125,7 +113,8 @@
                 {
                     layuimini.initMenu(MenuData)
                 }
-           layuimini.initConten(vCache.sGet('load_url'))
+            
+            layuimini.initConten(vCache.sGet('load_url'))
            var noticMsg = vCache.sGet('notic_msg')
            var isHasNotic = vCache.sGet('is_has_notic');
            if( isHasNotic == 'yes' && !noticMsg)
@@ -158,6 +147,11 @@
                 window.location = '/login.html';
             });
         });
+        $('[data-load-page]').click(function(){
+            var page = $(this).attr('data-load-page');
+            $('.layuimini-content-page').load(page);
+            vCache.sSet('load_url',page)
+        })
         $('body').on('click','.refsh-menu',function(){
             http.get('/admin/initmenu.htm').done(function(res){
                 if( res.code == 'success' )

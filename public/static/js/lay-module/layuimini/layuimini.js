@@ -60,18 +60,6 @@ layui.define(["element", "jquery",'layer','http','vCache'], function (exports) {
                 $('.layui-layout-body').attr('class', 'layui-layout-body layuimini-mini');
             }
         };
-        /**
-         * 初始化logo信息
-         * @param data
-         */
-        this.initLogo = function (data) {
-            var html = '<a href="' + data.href + '">\n' +
-                '<img src="' + data.image + '" alt="logo">\n' +
-                '<h1>' + data.title + '</h1>\n' +
-                '</a>';
-            $('.layui-layout-admin .layui-logo').html(html);
-        };
-
             /**
              * 初始化页面标题，并自动展开菜单栏
              * @param href 链接地址
@@ -278,7 +266,7 @@ layui.define(["element", "jquery",'layer','http','vCache'], function (exports) {
 
         this.side_fold = function( i = 0 ,$dom)
         {
-            var logo_dom = $('.layui-header .layui-logo');
+            var logo_dom = $('.layui-header .layui-logo > a');
             var title = logo_dom.find('h1').text();
          //  console.log(title)
             if (i == 1) { // 缩放

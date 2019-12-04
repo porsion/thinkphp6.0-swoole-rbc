@@ -1,0 +1,52 @@
+<div class="layui-card" style="padding-top:50px;height: 90vh;padding:80px 200px 20px 200px;line-height:170%">
+   <fieldset class="layui-elem-field"  style="width:650px; margin:0 auto">
+
+        <legend>欢迎体验！首页未写，本项目已放弃，不会更新，不会有bug修复</legend>
+        <div class="layui-field-box">
+            　　本项目是用 thinkphp6+swoole 写的，感觉实在是鸡肋，要么用thinkphp6.0，要么用其它基于swoole的框架。
+            我一路写下来，发现thinkphp6.0+swoole 实是尴尬，文档方面 ，关于swoole的少之又后，我要是去一点点的
+            刨代码，还不如用一个文档稍微写了点的框架，还有，框架所有的代码都在onRequest事件中，用swoole和不用，又有什么区别？
+            因此放弃。作者QQ：864455587。微信：porsion_864455587。本人承接各种PHP、vue、react商业项目，及linux的web环境问题，一切关于web环境的问题，都不是问题
+        </div>
+        <ol class="layui-field-box layui-list">
+            <p>thinkphp6.0+swoole开发总结：</p>
+            <p>尴尬!</p>
+            <li>关于swoole的文档少之又少，很多时候不知道怎么用，有什么功能
+                如果是去刨代码的话，不如写原生，写原生那跟thinkphp还有什么关系？
+                不如直接自己写框架
+            </li>
+            <li>我刨了半天源码都没找到具体的实现，因此，根据代码运行的表现，我猜测着，
+                我们项目里所有的代码都在onRequest事件时运行，因此，很多swoole的特性
+                几乎不能实现，
+                例如：定时器，Listeners,Timer,defer
+            </li>
+            <li>开发过程中遇到的问题：<br>
+                1).拿不到request的controller和action<br>
+                2).mysql链接池有严重bug，经常是too many connection<br>
+                3).除了会使用onReqeust事件，其它任何事件都不会用 ，主要是没文档<br>
+                4).综上所述，将会弃用thinkphp6.0+swoole框架
+            </li>
+        </ol>
+
+        <div class="layui-field-box">
+            <p>下一步计划：将会使用easyswoole重构这个多用户系统。</p>
+            <p>计划是：将会加强对管理用户功能的深度开发，加强高并发承载能力，
+            可能还会接入支付，在线聊天，文章发布，给各种前端调用预留各种接口，
+            以通用的result API 风格返回数据，加入IP黑名单，限流等等功能。
+            对安全性也会更加注重。
+            </p>
+            <p>
+                当然，开发过程也会以视频方式在b站上呈现，哦对，忘了说，我在B站的用户名是：我不是陈二两
+            </p>
+         </div>
+        <div class="layui-field-box">
+           <p>此程序开发视频过程：<a href="https://www.bilibili.com/video/av73401143/" target="_blank">https://www.bilibili.com/video/av73401143/</a>
+            </p>
+            <p>
+                此程序源码：<a href="https://github.com/porsion/thinkphp6.0-swoole-rbc" target="_blank">https://github.com/porsion/thinkphp6.0-swoole-rbc</a>
+            </p>
+        </div>
+
+
+    </fieldset>
+</div>
